@@ -3,7 +3,7 @@ Binary Search is a **fast searching algorithm** that works on sorted arrays by r
 
 ---
 
-## **How It Works**
+### **How It Works**
 1. Find the **middle** element of the sorted array.
 2. If the middle element is **equal** to the target, return its index.
 3. If the target is **smaller**, search in the **left half**.
@@ -12,7 +12,7 @@ Binary Search is a **fast searching algorithm** that works on sorted arrays by r
 
 ---
 
-## **Time Complexity**
+### **Time Complexity**
 | Case  | Time Complexity |
 |--------|----------------|
 | Best   | **O(1)** (if the element is found at the first mid) |
@@ -21,8 +21,8 @@ Binary Search is a **fast searching algorithm** that works on sorted arrays by r
 
 ---
 
-## **C# Implementation (Iterative & Recursive)**
-### **1. Iterative Approach**
+### **C# Implementation (Iterative & Recursive)**
+#### **1. Iterative Approach**
 ```csharp
 using System;
 
@@ -64,7 +64,7 @@ Element 34 found at index: 2
 
 ---
 
-### **2. Recursive Approach**
+#### **2. Recursive Approach**
 ```csharp
 using System;
 
@@ -102,8 +102,8 @@ Element 49 found at index: 3
 
 ---
 
-## **Python Implementation (Iterative & Recursive)**
-### **1. Iterative Approach**
+### **Python Implementation (Iterative & Recursive)**
+#### **1. Iterative Approach**
 ```python
 def binary_search(arr, target):
     left, right = 0, len(arr) - 1
@@ -134,7 +134,7 @@ Element 34 found at index: 2
 
 ---
 
-### **2. Recursive Approach**
+#### **2. Recursive Approach**
 ```python
 def binary_search_recursive(arr, left, right, target):
     if left > right:
@@ -163,7 +163,7 @@ Element 49 found at index: 3
 
 ---
 
-## **When to Use Binary Search?**
+### **When to Use Binary Search?**
 ✅ **Works only on sorted arrays** – If the array is not sorted, sort it first.  
 ✅ **Efficient for large datasets** – O(log n) is much faster than O(n) of linear search.  
 ✅ **Used in searching problems** – Like finding a specific element in a database or a dictionary.
