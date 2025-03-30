@@ -13,9 +13,11 @@ Linear Search is the simplest searching algorithm that checks every element in a
 ---
 
 ### **Time Complexity**
-- **Best Case:** O(1) (if the element is at the beginning)
-- **Worst Case:** O(n) (if the element is at the end or not present)
-- **Average Case:** O(n)
+| Case  | Time Complexity |
+|--------|----------------|
+| Best   | **O(1)** (if the element is at the beginning) |
+| Worst  | **O(n)** (if the element is at the end or not present) |
+| Average | **O(n)** |
 
 ### **Space Complexity**
 - **O(1)** (Only a few extra variables are used)
