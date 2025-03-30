@@ -19,6 +19,9 @@ Binary Search is a **fast searching algorithm** that works on sorted arrays by r
 | Worst  | **O(log n)** (keeps dividing the array in half) |
 | Average | **O(log n)** |
 
+### **Space Complexity**
+- **O(1)** (Only a few extra variables are used)
+
 ---
 
 ### **C# Implementation (Iterative & Recursive)**
