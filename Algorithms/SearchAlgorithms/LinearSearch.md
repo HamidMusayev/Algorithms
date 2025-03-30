@@ -66,8 +66,6 @@ int main() {
 }
 ```
 
----
-
 #### **C# Implementation**
 
 ##### **1. Iterative Approach (Using a Loop)**
@@ -100,8 +98,6 @@ class LinearSearchExample {
 ```
 Element found at index: 2
 ```
-
----
 
 #### **2. Recursive Approach**
 ```csharp
