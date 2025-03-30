@@ -1,4 +1,4 @@
-Here’s a comprehensive list of important **algorithms**, categorized by type:
+## Comprehensive list of important **algorithms**, categorized by type:
 
 ---
 
