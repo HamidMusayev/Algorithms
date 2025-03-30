@@ -4,7 +4,7 @@
 
 ### **1. Searching Algorithms** 🔍
 - **[Linear Search](Algorithms/SearchAlgorithms/LinearSearch.md)** – O(n), simple but slow.
-- **Binary Search** – O(log n), works on sorted arrays.
+- **[Binary Search](Algorithms/SearchAlgorithms/BinarySearch.md)** – O(log n), works on sorted arrays.
 - **Jump Search** – Faster than linear search, works on sorted arrays.
 - **Interpolation Search** – Variation of binary search, works well for uniformly distributed data.
 - **Exponential Search** – Used for searching in unbounded or infinite-sized lists.
