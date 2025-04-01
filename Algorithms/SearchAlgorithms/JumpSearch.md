@@ -3,14 +3,14 @@ Jump Search is an **efficient searching algorithm** that works on **sorted array
 
 ---
 
-## **How Jump Search Works**
+### **How Jump Search Works**
 1. **Jump in fixed steps** (usually √n) through the array.
 2. If the **current block** contains the target, perform **Linear Search** within the block.
 3. If not found, move to the **next block** and repeat until the target is found or the search space is exhausted.
 
 ---
 
-## **Time & Space Complexity**
+### **Time & Space Complexity**
 | Case        | Time Complexity  | Space Complexity |
 |------------|----------------|----------------|
 | **Best**   | **O(1)** (if the element is at the first jump) | **O(1)** (uses only a few extra variables) |
@@ -19,12 +19,12 @@ Jump Search is an **efficient searching algorithm** that works on **sorted array
 
 ---
 
-## **Jump Search Implementation**
+#### **Jump Search Implementation**
 Here’s a single implementation in **Python and C#**.
 
 ---
 
-### **Python Implementation**
+#### **Python Implementation**
 ```python
 import math
 
@@ -59,7 +59,7 @@ Element 9 found at index: 4
 
 ---
 
-### **C# Implementation**
+#### **C# Implementation**
 ```csharp
 using System;
 
