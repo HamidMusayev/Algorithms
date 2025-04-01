@@ -110,11 +110,3 @@ Element 40 found at index: 3
 🚫 **Not ideal for non-uniform data** – Performance can degrade to **O(n)** if values are clustered unevenly.
 
 ---
-
-### **Comparison with Other Search Algorithms**
-| Search Algorithm | Best Case | Worst Case | Space Complexity | Works on Sorted Arrays? |
-|-----------------|----------|------------|------------------|-------------------------|
-| **Linear Search** | O(1) | O(n) | O(1) | ❌ No |
-| **Binary Search** | O(1) | O(log n) | O(1) | ✅ Yes |
-| **Jump Search** | O(1) | O(√n) | O(1) | ✅ Yes |
-| **Interpolation Search** | O(1) | O(n) | O(1) | ✅ Yes, if uniformly distributed |
