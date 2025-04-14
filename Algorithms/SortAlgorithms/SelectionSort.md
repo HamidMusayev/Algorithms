@@ -1,8 +1,4 @@
-Exactly! ✅
-
----
-
-### **Selection Sort**
+### **Selection Sort 🔍**
 - **Time Complexity:**
   - **Best Case:** O(n²)
   - **Average Case:** O(n²)
