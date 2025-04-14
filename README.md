@@ -12,8 +12,6 @@
 ---
 
 ### **2. Sorting Algorithms** 🔢
-Here is the updated list of sorting algorithms, linked to Markdown files in your repository where applicable:
-
 - **[Bubble Sort](Algorithms/SortAlgorithms/BubbleSort.md)** – O(n²), simple but inefficient.
 - **[Selection Sort](Algorithms/SortAlgorithms/SelectionSort.md)** – O(n²), selects the smallest element in each pass.
 - **[Insertion Sort](Algorithms/SortAlgorithms/InsertionSort.md)** – O(n²), better for small datasets; works well on nearly sorted data.
