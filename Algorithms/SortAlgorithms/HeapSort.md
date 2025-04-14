@@ -1,7 +1,3 @@
-Absolutely! Let's dig into **Heap Sort**, another powerful comparison-based sorting algorithm. 🏗️
-
----
-
 ### **Heap Sort 🔍**
 
 Heap Sort uses a **binary heap** (usually a **max-heap**) to sort elements. It repeatedly extracts the maximum element from the heap and places it at the end of the array.
