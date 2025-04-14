@@ -1,7 +1,3 @@
-Exactly! Let's break it down:
-
----
-
 ### **Insertion Sort 🔍**
 - **Time Complexity:**
   - **Best Case:** O(n) – when array is already sorted
