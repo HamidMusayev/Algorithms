@@ -12,7 +12,7 @@
 ---
 
 ### **2. Sorting Algorithms** 🔢
-- **Bubble Sort** – O(n²), simple but inefficient.
+- **[Bubble Sort](Algorithms/SortAlgorithms/BubbleSort.md)** – O(n²), simple but inefficient.
 - **Selection Sort** – O(n²), selects the smallest element in each pass.
 - **Insertion Sort** – O(n²), better for small datasets.
 - **Merge Sort** – O(n log n), divide-and-conquer approach.
