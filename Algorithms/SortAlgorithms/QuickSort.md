@@ -1,4 +1,4 @@
-### **Quick Sort**
+### **Quick Sort 🔍**
 
 Quick Sort is a **divide-and-conquer** algorithm like Merge Sort, but it works **in-place**, making it faster in practice for most datasets.
 
