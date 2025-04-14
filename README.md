@@ -12,16 +12,20 @@
 ---
 
 ### **2. Sorting Algorithms** 🔢
+Here is the updated list of sorting algorithms, linked to Markdown files in your repository where applicable:
+
 - **[Bubble Sort](Algorithms/SortAlgorithms/BubbleSort.md)** – O(n²), simple but inefficient.
-- **Selection Sort** – O(n²), selects the smallest element in each pass.
-- **Insertion Sort** – O(n²), better for small datasets.
-- **Merge Sort** – O(n log n), divide-and-conquer approach.
-- **Quick Sort** – O(n log n), efficient but worst-case O(n²).
-- **Heap Sort** – O(n log n), uses a heap data structure.
-- **Counting Sort** – O(n + k), works for small integer ranges.
-- **Radix Sort** – O(nk), works on integer data.
-- **Bucket Sort** – O(n²) worst case, good for uniform distribution.
-- **Shell Sort** – O(n log n), an improved version of insertion sort.
+- **[Selection Sort](Algorithms/SortAlgorithms/SelectionSort.md)** – O(n²), selects the smallest element in each pass.
+- **[Insertion Sort](Algorithms/SortAlgorithms/InsertionSort.md)** – O(n²), better for small datasets; works well on nearly sorted data.
+- **[Merge Sort](Algorithms/SortAlgorithms/MergeSort.md)** – O(n log n), divide-and-conquer approach, stable sorting algorithm.
+- **[Quick Sort](Algorithms/SortAlgorithms/QuickSort.md)** – O(n log n) average case, but worst-case O(n²); highly efficient for large datasets.
+- **[Heap Sort](Algorithms/SortAlgorithms/HeapSort.md)** – O(n log n), uses a heap data structure, not stable but in-place.
+- **[Counting Sort](Algorithms/SortAlgorithms/CountingSort.md)** – O(n + k), works for small integer ranges; it is not a comparison-based sort.
+- **[Radix Sort](Algorithms/SortAlgorithms/RadixSort.md)** – O(nk), works on integers or strings with fixed lengths.
+- **[Bucket Sort](Algorithms/SortAlgorithms/BucketSort.md)** – O(n²) in worst case, but O(n + k) when the input is uniformly distributed.
+- **[Shell Sort](Algorithms/SortAlgorithms/ShellSort.md)** – O(n log n) in the best case, an improved version of insertion sort with diminishing increments.
+
+Let me know if you need help creating or editing these Markdown files for your repository!
 
 ---
 
