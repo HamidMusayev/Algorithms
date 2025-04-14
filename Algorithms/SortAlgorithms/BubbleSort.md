@@ -1,4 +1,4 @@
-### 🔹 **Bubble Sort**  
+### **Bubble Sort 🔍**  
 - **Time Complexity:**  
   - **Best Case:** O(n) *(when array is already sorted – with optimization)*  
   - **Average Case:** O(n²)  
@@ -9,12 +9,12 @@
 
 ---
 
-#### 🔹 **Explanation**  
+#### **Explanation**  
 Bubble Sort repeatedly steps through the list, compares adjacent items, and **swaps them** if they are in the wrong order. The largest element "bubbles up" to the end in each pass.
 
 ---
 
-#### 🔹 **Python Implementation**
+#### **Python Implementation**
 ```python
 def bubble_sort(arr):
     n = len(arr)
@@ -35,7 +35,7 @@ print("Sorted array:", bubble_sort(arr))
 
 ---
 
-#### 🔹 **C# Implementation**
+#### **C# Implementation**
 ```csharp
 using System;
 
@@ -68,7 +68,7 @@ class BubbleSortExample {
 
 ---
 
-#### 🔹 When to Use
+#### When to Use
 ✅ **Simple to understand & implement**  
 ✅ **Good for educational purposes**  
 🚫 **Not efficient for large datasets**  
