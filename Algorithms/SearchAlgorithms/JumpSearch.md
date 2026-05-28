@@ -19,11 +19,6 @@ Jump Search is an **efficient searching algorithm** that works on **sorted array
 
 ---
 
-#### **Jump Search Implementation**
-Here’s a single implementation in **Python and C#**.
-
----
-
 #### **Python Implementation**
 ```python
 import math
@@ -51,51 +46,6 @@ target = 9
 
 result = jump_search(arr, target)
 print(f"Element {target} found at index: {result}" if result != -1 else "Element not found")
-```
-**Example Output:**
-```
-Element 9 found at index: 4
-```
-
----
-
-#### **C# Implementation**
-```csharp
-using System;
-
-class JumpSearchExample {
-    static int JumpSearch(int[] arr, int target) {
-        int n = arr.Length;
-        int step = (int)Math.Floor(Math.Sqrt(n));
-        int prev = 0;
-
-        while (prev < n && arr[Math.Min(step, n) - 1] < target) {
-            prev = step;
-            step += (int)Math.Floor(Math.Sqrt(n));
-            if (prev >= n)
-                return -1;  // Not found
-        }
-
-        // Perform Linear Search within the block
-        for (int i = prev; i < Math.Min(step, n); i++) {
-            if (arr[i] == target)
-                return i;  // Found, return index
-        }
-        return -1;  // Not found
-    }
-
-    static void Main() {
-        int[] arr = {1, 3, 5, 7, 9, 11, 13, 15};
-        int target = 9;
-
-        int result = JumpSearch(arr, target);
-
-        if (result != -1)
-            Console.WriteLine($"Element {target} found at index: {result}");
-        else
-            Console.WriteLine("Element not found");
-    }
-}
 ```
 **Example Output:**
 ```

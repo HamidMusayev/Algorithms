@@ -41,36 +41,6 @@ print("Sorted array:", insertion_sort(arr))
 
 ---
 
-### C# Implementation
-```csharp
-using System;
-
-class InsertionSortExample {
-    static void InsertionSort(int[] arr) {
-        for (int i = 1; i < arr.Length; i++) {
-            int key = arr[i];
-            int j = i - 1;
-
-            // Shift elements greater than key
-            while (j >= 0 && arr[j] > key) {
-                arr[j + 1] = arr[j];
-                j--;
-            }
-
-            arr[j + 1] = key; // Insert key
-        }
-    }
-
-    static void Main() {
-        int[] arr = {12, 11, 13, 5, 6};
-        InsertionSort(arr);
-        Console.WriteLine("Sorted array: " + string.Join(", ", arr));
-    }
-}
-```
-
----
-
 #### When to Use
 ✅ Great for **small or nearly sorted datasets**  
 ✅ Simple and efficient for real-time data input  

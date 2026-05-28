@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="568455ad-bc35-436b-be43-99b99bae7a6b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/BinarySearch.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/BinarySearch.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/ExponentialSearch.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/ExponentialSearch.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/InterpolationSearch.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/InterpolationSearch.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/JumpSearch.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/JumpSearch.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/LinearSearch.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SearchAlgorithms/LinearSearch.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SortAlgorithms/BubbleSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SortAlgorithms/BubbleSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SortAlgorithms/CountingSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SortAlgorithms/CountingSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SortAlgorithms/HeapSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SortAlgorithms/HeapSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SortAlgorithms/InsertionSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SortAlgorithms/InsertionSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SortAlgorithms/MergeSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SortAlgorithms/MergeSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SortAlgorithms/QuickSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SortAlgorithms/QuickSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SortAlgorithms/RadixSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SortAlgorithms/RadixSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Algorithms/SortAlgorithms/SelectionSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Algorithms/SortAlgorithms/SelectionSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "HamidMusayev"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/HamidMusayev/Algorithms.git",
+    "accountId": "b9812d4e-e273-4310-b50c-596ef7fb21f7"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3EMRgxiks7H3nXj4MD6kvtb2Vou" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="568455ad-bc35-436b-be43-99b99bae7a6b" name="Changes" comment="" />
+      <created>1779986567509</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1779986567509</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

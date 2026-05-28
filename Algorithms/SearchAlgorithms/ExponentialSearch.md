@@ -19,11 +19,6 @@ Exponential Search is an **efficient searching algorithm** that works well for *
 
 ---
 
-### **Exponential Search Implementation**
-Here’s the implementation in **Python and C#**.
-
----
-
 #### **Python Implementation**
 ```python
 def binary_search(arr, left, right, target):
@@ -55,58 +50,6 @@ target = 10
 
 result = exponential_search(arr, target)
 print(f"Element {target} found at index: {result}" if result != -1 else "Element not found")
-```
-**Example Output:**
-```
-Element 10 found at index: 3
-```
-
----
-
-#### **C# Implementation**
-```csharp
-using System;
-
-class ExponentialSearchExample {
-    static int BinarySearch(int[] arr, int left, int right, int target) {
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-
-            if (arr[mid] == target)
-                return mid;
-            else if (arr[mid] < target)
-                left = mid + 1;
-            else
-                right = mid - 1;
-        }
-        return -1;
-    }
-
-    static int ExponentialSearch(int[] arr, int target) {
-        if (arr[0] == target)
-            return 0;
-
-        int size = arr.Length;
-        int index = 1;
-
-        while (index < size && arr[index] <= target)
-            index *= 2; // Double the index
-
-        return BinarySearch(arr, index / 2, Math.Min(index, size - 1), target);
-    }
-
-    static void Main() {
-        int[] arr = { 2, 3, 4, 10, 40, 80, 120 };
-        int target = 10;
-
-        int result = ExponentialSearch(arr, target);
-
-        if (result != -1)
-            Console.WriteLine($"Element {target} found at index: {result}");
-        else
-            Console.WriteLine("Element not found");
-    }
-}
 ```
 **Example Output:**
 ```

@@ -22,11 +22,6 @@ Interpolation Search is an **improved version of Binary Search** that works effi
 
 ---
 
-### **Interpolation Search Implementation**
-Below is a **single implementation** in both **Python and C#**.
-
----
-
 #### **Python Implementation**
 ```python
 def interpolation_search(arr, target):
@@ -51,49 +46,6 @@ target = 40
 
 result = interpolation_search(arr, target)
 print(f"Element {target} found at index: {result}" if result != -1 else "Element not found")
-```
-**Example Output:**
-```
-Element 40 found at index: 3
-```
-
----
-
-#### **C# Implementation**
-```csharp
-using System;
-
-class InterpolationSearchExample {
-    static int InterpolationSearch(int[] arr, int target) {
-        int low = 0, high = arr.Length - 1;
-
-        while (low <= high && arr[low] <= target && target <= arr[high]) {
-            // Estimate position using interpolation formula
-            int pos = low + ((target - arr[low]) * (high - low) / (arr[high] - arr[low]));
-
-            if (arr[pos] == target)
-                return pos; // Found, return index
-            else if (arr[pos] < target)
-                low = pos + 1; // Search right half
-            else
-                high = pos - 1; // Search left half
-        }
-
-        return -1; // Not found
-    }
-
-    static void Main() {
-        int[] arr = {10, 20, 30, 40, 50, 60, 70, 80, 90};
-        int target = 40;
-
-        int result = InterpolationSearch(arr, target);
-
-        if (result != -1)
-            Console.WriteLine($"Element {target} found at index: {result}");
-        else
-            Console.WriteLine("Element not found");
-    }
-}
 ```
 **Example Output:**
 ```

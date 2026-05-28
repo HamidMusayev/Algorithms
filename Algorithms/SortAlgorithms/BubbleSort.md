@@ -35,39 +35,6 @@ print("Sorted array:", bubble_sort(arr))
 
 ---
 
-#### **C# Implementation**
-```csharp
-using System;
-
-class BubbleSortExample {
-    static void BubbleSort(int[] arr) {
-        int n = arr.Length;
-        for (int i = 0; i < n; i++) {
-            bool swapped = false;
-            for (int j = 0; j < n - i - 1; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    // Swap
-                    int temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
-                    swapped = true;
-                }
-            }
-            if (!swapped)
-                break; // Already sorted
-        }
-    }
-
-    static void Main() {
-        int[] arr = {64, 34, 25, 12, 22, 11, 90};
-        BubbleSort(arr);
-        Console.WriteLine("Sorted array: " + string.Join(", ", arr));
-    }
-}
-```
-
----
-
 #### When to Use
 ✅ **Simple to understand & implement**  
 ✅ **Good for educational purposes**  

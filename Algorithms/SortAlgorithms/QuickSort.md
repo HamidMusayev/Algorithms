@@ -47,46 +47,6 @@ print("Sorted array:", quick_sort(arr))
 
 ---
 
-#### C# Implementation
-
-```csharp
-using System;
-
-class QuickSortExample {
-    static void QuickSort(int[] arr, int low, int high) {
-        if (low < high) {
-            int pi = Partition(arr, low, high);
-
-            QuickSort(arr, low, pi - 1);
-            QuickSort(arr, pi + 1, high);
-        }
-    }
-
-    static int Partition(int[] arr, int low, int high) {
-        int pivot = arr[high]; // using last element as pivot
-        int i = (low - 1);
-
-        for (int j = low; j < high; j++) {
-            if (arr[j] < pivot) {
-                i++;
-                (arr[i], arr[j]) = (arr[j], arr[i]); // Swap
-            }
-        }
-
-        (arr[i + 1], arr[high]) = (arr[high], arr[i + 1]); // Final pivot swap
-        return i + 1;
-    }
-
-    static void Main() {
-        int[] arr = {10, 7, 8, 9, 1, 5};
-        QuickSort(arr, 0, arr.Length - 1);
-        Console.WriteLine("Sorted array: " + string.Join(", ", arr));
-    }
-}
-```
-
----
-
 #### When to Use
 
 ✅ Best choice for **large, unsorted datasets**  

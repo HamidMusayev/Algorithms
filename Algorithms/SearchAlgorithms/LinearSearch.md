@@ -24,9 +24,9 @@ Linear Search is the simplest searching algorithm that checks every element in a
 
 ---
 
-### **Implementation**
+### **Python Implementation**
 
-#### **Python Implementation**
+#### **1. Iterative Approach**
 ```python
 def linear_search(arr, target):
     for i in range(len(arr)):
@@ -41,100 +41,25 @@ result = linear_search(arr, target)
 print("Element found at index:", result) if result != -1 else print("Element not found")
 ```
 
-#### **C Implementation**
-```c
-#include <stdio.h>
-
-int linearSearch(int arr[], int size, int target) {
-    for (int i = 0; i < size; i++) {
-        if (arr[i] == target)
-            return i;
-    }
-    return -1;
-}
-
-int main() {
-    int arr[] = {10, 20, 30, 40, 50};
-    int target = 30;
-    int size = sizeof(arr) / sizeof(arr[0]);
-    int result = linearSearch(arr, size, target);
-
-    if (result != -1)
-        printf("Element found at index: %d\n", result);
-    else
-        printf("Element not found\n");
-
-    return 0;
-}
-```
-
-#### **C# Implementation**
-
-##### **1. Iterative Approach (Using a Loop)**
-```csharp
-using System;
-
-class LinearSearchExample {
-    static int LinearSearch(int[] arr, int target) {
-        for (int i = 0; i < arr.Length; i++) {
-            if (arr[i] == target)
-                return i; // Found, return index
-        }
-        return -1; // Not found
-    }
-
-    static void Main() {
-        int[] arr = { 10, 20, 30, 40, 50 };
-        int target = 30;
-        
-        int result = LinearSearch(arr, target);
-        
-        if (result != -1)
-            Console.WriteLine("Element found at index: " + result);
-        else
-            Console.WriteLine("Element not found");
-    }
-}
-```
-**Output:**
-```
-Element found at index: 2
-```
-
 #### **2. Recursive Approach**
-```csharp
-using System;
+```python
+def linear_search_recursive(arr, target, index=0):
+    if index >= len(arr):
+        return -1  # Base case: not found
+    if arr[index] == target:
+        return index  # Found
+    return linear_search_recursive(arr, target, index + 1)
 
-class LinearSearchRecursive {
-    static int LinearSearch(int[] arr, int target, int index) {
-        if (index >= arr.Length) return -1; // Base case: not found
-        if (arr[index] == target) return index; // Found, return index
-        return LinearSearch(arr, target, index + 1); // Recursive call
-    }
-
-    static void Main() {
-        int[] arr = { 10, 20, 30, 40, 50 };
-        int target = 40;
-
-        int result = LinearSearch(arr, target, 0);
-        
-        if (result != -1)
-            Console.WriteLine("Element found at index: " + result);
-        else
-            Console.WriteLine("Element not found");
-    }
-}
-```
-**Output:**
-```
-Element found at index: 3
+# Example Usage
+arr = [10, 20, 30, 40, 50]
+print(linear_search_recursive(arr, 40))  # 3
 ```
 
 ---
 
 ### **When to Use Each Approach?**
-- ✅ **Iterative Approach** – Simple and efficient for most cases.
-- ✅ **Recursive Approach** – Useful for functional programming but has extra function call overhead.
+- ✅ **Iterative** – Simple and efficient for most cases.
+- ✅ **Recursive** – Cleaner for functional style, but has extra call overhead.
 
 ---
 

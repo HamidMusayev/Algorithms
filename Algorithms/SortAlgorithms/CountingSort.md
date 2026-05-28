@@ -55,45 +55,6 @@ print("Sorted array:", counting_sort(arr))
 
 ---
 
-#### C# Implementation
-
-```csharp
-using System;
-using System.Collections.Generic;
-
-class CountingSortExample {
-    static int[] CountingSort(int[] arr) {
-        if (arr.Length == 0) return arr;
-
-        int max = arr[0];
-        foreach (int num in arr)
-            if (num > max) max = num;
-
-        int[] count = new int[max + 1];
-
-        // Count occurrences
-        foreach (int num in arr)
-            count[num]++;
-
-        // Build sorted array
-        List<int> output = new List<int>();
-        for (int i = 0; i < count.Length; i++)
-            for (int j = 0; j < count[i]; j++)
-                output.Add(i);
-
-        return output.ToArray();
-    }
-
-    static void Main() {
-        int[] arr = {4, 2, 2, 8, 3, 3, 1};
-        int[] sorted = CountingSort(arr);
-        Console.WriteLine("Sorted array: " + string.Join(", ", sorted));
-    }
-}
-```
-
----
-
 #### When to Use
 
 ✅ Best for **large number of items in a small range**  
