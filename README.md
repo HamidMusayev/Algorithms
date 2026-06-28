@@ -1,6 +1,4 @@
-# Alqoritmlər — Öyrənmə Anbarı 📚
-
-> Hər alqoritm üçün ayrıca, sadə yazı: **fikir + bənzətmə**, **necə işləyir**, **nümunə**, **şərhli Python kodu**, **mürəkkəblik**, **nə vaxt istifadə**, **əlaqəli alqoritmlər**.
+# Alqoritmlər
 
 ---
 
