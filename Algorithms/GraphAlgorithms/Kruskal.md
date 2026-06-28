@@ -1,78 +1,35 @@
-# Kruskal's Algorithm 🔗
+# Kruskal Alqoritmi
 
----
+**Fikir:** Bütün mümkün yolları (tilovları) qiymətə görə sıralayırıq və ən ucuzdan başlayıb əlavə edirik. İki şəhər artıq qoşulubsa, o yolu atlayırıq (dövr olardı). Hansı şəhərlərin qoşulu olduğunu **Union-Find** ilə izləyirik. Nəticə: **Minimal Örtən Ağac (MST)**.
 
-## 🧠 Intuition
+## Necə işləyir
+1. Hər node öz dəstində olan **DSU (ayrıq dəstlər)** yarat.
+2. Bütün tilovları çəkiyə görə artan sırala.
+3. Hər `(u, v, w)` tilovu üçün ucuzdan bahaya:
+   - `find(u) ≠ find(v)` → fərqli komponentlər → **təhlükəsiz əlavə et**, birləşdir, çəkini topla.
+   - `find(u) == find(v)` → dövr olardı → atla.
+4. MST-də V−1 tilov olanda dayan.
 
-Imagine you have a list of all possible roads between cities and their construction costs. To connect all cities cheaply, you sort roads by cost and build the cheapest one first. If two cities being connected are already connected (directly or indirectly), you skip that road — it would just be redundant. You use a **Union-Find** data structure to efficiently track which cities are already connected.
+## Nümunə
+Sıralı tilovlar: `(0,1,1), (1,2,1), (2,3,1), (0,2,3), (1,3,4)`
+- İlk üçü əlavə olunur, son ikisi dövr yaradır → atlanır.
+- MST = {0-1, 1-2, 2-3}, ümumi çəki = **3** ✅
 
-**Mental model:** Sort all edges by weight. Greedily add the cheapest edge that doesn't create a cycle.
-
----
-
-## 📊 Complexity
-
-| Metric | Value |
-|--------|-------|
-| Time Complexity | O(E log E) — dominated by sorting |
-| Space Complexity | O(V) — for the Union-Find structure |
-| Works on | Undirected weighted graphs |
-| Output | Minimum Spanning Tree (MST) |
-
-> The Union-Find operations (find + union) are nearly O(1) amortized with path compression and union by rank.
-
----
-
-## ⚙️ How It Works
-
-1. Create a **DSU (Disjoint Set Union)** with V nodes, each in its own set.
-2. **Sort all edges** by weight in ascending order.
-3. For each edge `(u, v, w)` from cheapest to most expensive:
-   - If `find(u) ≠ find(v)` → they are in different components → **safe to add**.
-     - Union the two components.
-     - Add edge to MST, accumulate weight.
-   - If `find(u) == find(v)` → adding this edge would create a **cycle** → skip.
-4. Stop when MST has V-1 edges.
-
----
-
-## 🔢 Step-by-Step Trace
-
-Edges (sorted): `(0,1,1), (1,2,1), (2,3,1), (0,2,3), (1,3,4)`
-
-| Step | Edge    | find(u)==find(v)? | Action       | MST             |
-|------|---------|--------------------|--------------|-----------------| 
-| 1    | (0,1,1) | No                 | Add to MST   | {0-1}           |
-| 2    | (1,2,1) | No                 | Add to MST   | {0-1, 1-2}      |
-| 3    | (2,3,1) | No                 | Add to MST   | {0-1,1-2,2-3}   |
-| 4    | (0,2,3) | Yes (0,1,2 connected)| Skip (cycle) | unchanged      |
-| 5    | (1,3,4) | Yes (all connected)| Skip (cycle) | unchanged      |
-
-MST: edges (0,1,1), (1,2,1), (2,3,1). Total weight = 3. ✅
-
----
-
-## 🐍 Python Implementation
-
+## Kod
 ```python
 class DSU:
-    """Disjoint Set Union with path compression and union by rank."""
+    """Yol sıxılması və ranqa görə birləşmə ilə ayrıq dəstlər."""
     def __init__(self, n):
-        self.parent = list(range(n))   # Each node is its own parent initially
+        self.parent = list(range(n))
         self.rank = [0] * n
-
     def find(self, x):
-        # Path compression: flatten the tree while finding root
         if self.parent[x] != x:
-            self.parent[x] = self.find(self.parent[x])
+            self.parent[x] = self.find(self.parent[x])   # yol sıxılması
         return self.parent[x]
-
     def union(self, x, y):
-        """Merge sets of x and y. Returns False if already in same set (cycle)."""
         rx, ry = self.find(x), self.find(y)
         if rx == ry:
-            return False          # Same component → edge would create a cycle
-        # Union by rank: attach smaller tree under larger
+            return False                  # eyni komponent → dövr
         if self.rank[rx] < self.rank[ry]:
             rx, ry = ry, rx
         self.parent[ry] = rx
@@ -80,75 +37,36 @@ class DSU:
             self.rank[rx] += 1
         return True
 
-
 def kruskal(V, edges):
-    """
-    V: number of vertices
-    edges: list of (u, v, weight)
-    Returns (mst_edges, total_weight)
-    """
-    edges.sort(key=lambda e: e[2])    # Sort by edge weight (ascending)
+    edges.sort(key=lambda e: e[2])        # çəkiyə görə sırala
     dsu = DSU(V)
-    mst_edges = []
-    total_weight = 0
-
+    mst, total = [], 0
     for u, v, w in edges:
-        if dsu.union(u, v):           # If not creating a cycle
-            mst_edges.append((u, v, w))
-            total_weight += w
-            if len(mst_edges) == V - 1:  # MST complete
+        if dsu.union(u, v):               # dövr yaratmırsa
+            mst.append((u, v, w))
+            total += w
+            if len(mst) == V - 1:
                 break
+    return mst, total
 
-    return mst_edges, total_weight
-
-
-# Example
-edges = [(0, 1, 1), (0, 2, 3), (1, 2, 1), (1, 3, 4), (2, 3, 1)]
-mst, total = kruskal(4, edges)
-print("MST edges:", mst)
-# [(0, 1, 1), (1, 2, 1), (2, 3, 1)]
-print("Total weight:", total)
-# 3
+edges = [(0,1,1), (0,2,3), (1,2,1), (1,3,4), (2,3,1)]
+print(kruskal(4, edges))   # ([(0,1,1),(1,2,1),(2,3,1)], 3)
 ```
 
----
+## Mürəkkəblik
+| Metrika | Dəyər |
+|---------|-------|
+| Vaxt | O(E log E) (sıralama üstünlük təşkil edir) |
+| Yaddaş | O(V) |
 
-## 🎯 Recognize This Problem When...
+Union-Find əməliyyatları (yol sıxılması + ranq ilə) demək olar O(1)-dir.
 
-- You need to **connect all nodes with minimum total edge weight**.
-- The graph is represented as an **edge list** (Kruskal works directly on edge lists).
-- The graph is **sparse** (few edges relative to nodes).
-- Keywords: "minimum cost network", "minimum spanning tree", "connect all nodes cheaply".
+## Nə vaxt
+- ✅ Bütün node-ları minimum ümumi çəki ilə qoşmaq; qraf **tilov siyahısı** kimi verilib.
+- ✅ Qraf seyrəkdir (E node sayına yaxın).
+- ❌ Sıx qraf (E ≈ V²) — Prim daha səmərəli.
+- ❌ Yönlü qraf — minimal örtən arborescensiya lazımdır.
 
----
-
-## ✅ When to Use / ❌ When NOT to Use
-
-| Situation                                  | Verdict                                       |
-|--------------------------------------------|-----------------------------------------------|
-| Sparse graphs (E close to V)               | ✅ Kruskal excels here                        |
-| Graph given as edge list                   | ✅ No adjacency list conversion needed        |
-| Need MST for disconnected graph check      | ✅ Number of MST edges < V-1 means disconnected|
-| Dense graphs (E close to V²)               | ❌ Prim's is more efficient                   |
-| Directed graphs                            | ❌ Use minimum spanning arborescence          |
-
----
-
-## 🔗 Related Algorithms
-
-| Algorithm                              | How it relates                                                |
-|----------------------------------------|---------------------------------------------------------------|
-| [Prim's Algorithm](Prim.md)            | Also finds MST; grows from a node instead of sorting all edges|
-| [Union-Find / DSU](../MiscAlgorithms/HopcroftKarp.md) | The core data structure powering Kruskal  |
-| [Dijkstra](Dijkstra.md)                | Shortest path, not MST; different objective                   |
-
----
-
-## 📝 Practice Problems
-
-| Problem                              | Platform   | Difficulty |
-|-------------------------------------|------------|------------|
-| Min Cost to Connect All Points      | [LeetCode 1584](https://leetcode.com/problems/min-cost-to-connect-all-points/) | 🟡 Medium |
-| Connecting Cities With Minimum Cost | [LeetCode 1135](https://leetcode.com/problems/connecting-cities-with-minimum-cost/) | 🟡 Medium |
-| Number of Operations to Make Network Connected | [LeetCode 1319](https://leetcode.com/problems/number-of-operations-to-make-network-connected/) | 🟡 Medium |
-| Kruskal MST                         | [HackerRank](https://www.hackerrank.com/challenges/kruskalmstrsub/problem) | 🟡 Medium |
+## Əlaqəli
+- [Prim](Prim.md) — həm də MST tapır; bütün tilovları sıralamaq yox, bir node-dan böyüyür.
+- [Dijkstra](Dijkstra.md) — ən qısa yol, MST yox; fərqli məqsəd.

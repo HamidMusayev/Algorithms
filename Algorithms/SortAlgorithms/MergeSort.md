@@ -1,141 +1,56 @@
-# Merge Sort 🔀
+# Merge Sort
 
----
+**Fikir:** Massivi yarıya bölürük, hər yarını rekursiv sıralayırıq, sonra iki sıralı yarını birləşdiririk (merge). Əsl iş birləşdirmə mərhələsində baş verir.
 
-## 🧠 Intuition
+## Necə işləyir
+1. **Baza:** 0 və ya 1 elementli massiv onsuz da sıralıdır — qaytar.
+2. **Böl:** Ortanı tap, `left` və `right` yarılara ayır.
+3. **Sırala:** Hər iki yarını rekursiv sırala.
+4. **Birləşdir:** İki sıralı yarının önündəki elementləri müqayisə et, kiçiyini nəticəyə əlavə et; biri bitəndə qalanını sona köçür.
 
-Imagine sorting a deck of cards by splitting it into two halves, handing each half to a friend, and telling them to sort theirs. Once both friends are done, you merge the two sorted halves by repeatedly picking the smaller card from the top of either pile.
+## Nümunə
+`[38, 27, 43, 3]` → `[38,27]` və `[43,3]` → `[27,38]` və `[3,43]`
 
-**Mental model:** Divide the problem in half recursively until trivial (1 element = sorted), then merge sorted halves — all the real work happens during the merge.
+Birləşdirmə: 3 → 27 → 38 → 43 = `[3, 27, 38, 43]` ✅
 
----
-
-## 📊 Complexity
-
-| Case    | Time        | Space  | Stable | Adaptive |
-|---------|-------------|--------|--------|----------|
-| Best    | O(n log n)  | O(n)   | ✅ Yes | ❌ No    |
-| Average | O(n log n)  | O(n)   | ✅ Yes | ❌ No    |
-| Worst   | O(n log n)  | O(n)   | ✅ Yes | ❌ No    |
-
-> O(n) auxiliary space is used for the temporary arrays during merging. This is the key trade-off vs QuickSort.
-
----
-
-## ⚙️ How It Works
-
-1. **Base case:** If the array has 0 or 1 element, return it (already sorted).
-2. **Divide:** Find the midpoint and split into `left` and `right` halves.
-3. **Conquer:** Recursively sort both halves.
-4. **Merge:** Combine the two sorted halves:
-   - Compare front elements of both halves.
-   - Always pick the smaller one and append to result.
-   - When one half is exhausted, append all remaining elements from the other.
-
----
-
-## 🔢 Step-by-Step Trace
-
-Input: `[38, 27, 43, 3]`
-
-```
-Split phase:
-[38, 27, 43, 3]
-   /         \
-[38, 27]   [43, 3]
- /    \     /    \
-[38] [27] [43]  [3]
-
-Merge phase:
-[27, 38]   [3, 43]
-     \       /
-   [3, 27, 38, 43]
-```
-
-Merging `[27, 38]` and `[3, 43]`:
-
-| Step | Left  | Right | Result so far       |
-|------|-------|-------|---------------------|
-| 1    | 27    | 3     | `[3]` ← pick 3      |
-| 2    | 27    | 43    | `[3, 27]` ← pick 27 |
-| 3    | 38    | 43    | `[3, 27, 38]` ← pick 38 |
-| 4    | done  | 43    | `[3, 27, 38, 43]` ← append 43 |
-
----
-
-## 🐍 Python Implementation
-
+## Kod
 ```python
 def merge_sort(arr):
-    if len(arr) <= 1:            # Base case: already sorted
+    if len(arr) <= 1:               # baza: onsuz da sıralı
         return arr
-
     mid = len(arr) // 2
-    left = merge_sort(arr[:mid])     # Recursively sort left half
-    right = merge_sort(arr[mid:])    # Recursively sort right half
-
-    return merge(left, right)        # Merge the two sorted halves
+    left = merge_sort(arr[:mid])    # sol yarını sırala
+    right = merge_sort(arr[mid:])   # sağ yarını sırala
+    return merge(left, right)
 
 def merge(left, right):
-    result = []
-    i = j = 0
-    # Pick the smaller front element from each half until one is empty
+    result, i, j = [], 0, 0
     while i < len(left) and j < len(right):
-        if left[i] <= right[j]:      # <= ensures stability (equal elements keep order)
-            result.append(left[i])
-            i += 1
+        if left[i] <= right[j]:     # <= stabilliyi qoruyur
+            result.append(left[i]); i += 1
         else:
-            result.append(right[j])
-            j += 1
-    result.extend(left[i:])          # Append any remaining elements
+            result.append(right[j]); j += 1
+    result.extend(left[i:])         # qalanları əlavə et
     result.extend(right[j:])
     return result
 
-# Example
-arr = [38, 27, 43, 3, 9, 82, 10]
-print("Sorted:", merge_sort(arr))    # [3, 9, 10, 27, 38, 43, 82]
+print(merge_sort([38, 27, 43, 3, 9, 82, 10]))   # [3, 9, 10, 27, 38, 43, 82]
 ```
 
----
+## Mürəkkəblik
+| Hal | Vaxt | Yaddaş |
+|-----|------|--------|
+| Hər zaman | O(n log n) | O(n) |
 
-## 🎯 Recognize This Problem When...
+Stabil ✅ · Yerində deyil ❌ (əlavə O(n) yaddaş — QuickSort ilə əsas fərq).
 
-- You need a **guaranteed O(n log n)** sort (no worst-case O(n²) like QuickSort).
-- You need a **stable sort** — equal elements must keep their original order.
-- You are sorting a **linked list** (Merge Sort is preferred; QuickSort needs random access).
-- The problem involves **counting inversions** in an array (count during merge step).
-- Data is too large for RAM — **external merge sort** is the standard for disk-based sorting.
+## Nə vaxt
+- ✅ Hər halda zəmanətli O(n log n) lazım olanda (QuickSort-un O(n²) pis halı yoxdur).
+- ✅ Stabil sıralama; bağlı siyahıların (linked list) sıralanması.
+- ✅ İnversiyaların sayını saymaq; data RAM-a sığmayanda (xarici sıralama).
+- ❌ Yaddaş çox məhduddursa — əlavə O(n) yer lazımdır.
 
----
-
-## ✅ When to Use / ❌ When NOT to Use
-
-| Situation                                  | Verdict                                    |
-|--------------------------------------------|--------------------------------------------|
-| Need guaranteed O(n log n) in all cases    | ✅ Merge Sort never degrades               |
-| Need stable sort on large data             | ✅ Best stable O(n log n) sort             |
-| Sorting linked lists                       | ✅ No random access needed                 |
-| Counting inversions                        | ✅ Count during the merge step             |
-| Memory is very constrained                 | ❌ Needs O(n) extra space                  |
-| General-purpose in-memory sorting          | ❌ QuickSort is faster in practice         |
-
----
-
-## 🔗 Related Algorithms
-
-| Algorithm                          | How it relates                                              |
-|------------------------------------|-------------------------------------------------------------|
-| [Quick Sort](QuickSort.md)         | Also divide-and-conquer; faster average but O(n²) worst case |
-| [Insertion Sort](InsertionSort.md) | Used as base case in TimSort (Python's built-in sort)       |
-| [Heap Sort](HeapSort.md)           | Also O(n log n); in-place but not stable                    |
-
----
-
-## 📝 Practice Problems
-
-| Problem                              | Platform   | Difficulty |
-|-------------------------------------|------------|------------|
-| Sort an Array                       | [LeetCode 912](https://leetcode.com/problems/sort-an-array/) | 🟡 Medium |
-| Count of Smaller Numbers After Self | [LeetCode 315](https://leetcode.com/problems/count-of-smaller-numbers-after-self/) | 🔴 Hard |
-| Sort List (Linked List)             | [LeetCode 148](https://leetcode.com/problems/sort-list/) | 🟡 Medium |
-| Reverse Pairs                       | [LeetCode 493](https://leetcode.com/problems/reverse-pairs/) | 🔴 Hard |
+## Əlaqəli
+- [Quick Sort](QuickSort.md) — həm də böl-və-idarə et; orta halda daha sürətli, amma pis halda O(n²).
+- [Insertion Sort](InsertionSort.md) — Timsort-da kiçik hissələr üçün baza kimi istifadə olunur.
+- [Heap Sort](HeapSort.md) — həm də O(n log n); yerində, amma stabil deyil.

@@ -1,142 +1,63 @@
-# Heap Sort 🌳
+# Heap Sort
 
----
+**Fikir:** Massivdən **maks-topa (max-heap)** qururuq — kökdə həmişə ən böyük element olur. Sonra dəfələrlə ən böyüyü çıxarıb massivin sonuna qoyuruq.
 
-## 🧠 Intuition
+## Necə işləyir
+**Mərhələ 1 — Maks-topa qur:**
+1. Son yarpaq olmayan node-dan (`n//2 - 1`) başlayıb 0-a qədər `heapify` çağır.
+2. Bundan sonra `arr[0]` ən böyükdür.
 
-Imagine a tournament where the strongest player always rises to the top. You extract the champion, then re-run the tournament with the remaining players to find the next champion. Repeat until no players are left — they have been extracted in order of strength.
+**Mərhələ 2 — Bir-bir çıxar:**
+3. `arr[0]` (maks) ilə sıralanmamış hissənin sonuncu elementini yer dəyiş — bu element artıq son yerindədir.
+4. Topanın ölçüsünü 1 azalt və kökdən `heapify` edib topa xassəsini bərpa et.
+5. Topada 1 element qalana qədər təkrarla.
 
-A **max-heap** is that tournament bracket — the root is always the largest element, and `heapify` re-runs the tournament after removal.
+## Nümunə
+`[4, 10, 3, 5, 1]` → maks-topa: `[10, 5, 3, 4, 1]`
+→ çıxarma: `[..., 10]` → `[..., 5, 10]` → `[..., 4, 5, 10]` → `[1, 3, 4, 5, 10]` ✅
 
-**Mental model:** Build a max-heap, then repeatedly extract the maximum and place it at the array's end.
-
----
-
-## 📊 Complexity
-
-| Case    | Time        | Space | Stable | Adaptive |
-|---------|-------------|-------|--------|----------|
-| Best    | O(n log n)  | O(1)  | ❌ No  | ❌ No    |
-| Average | O(n log n)  | O(1)  | ❌ No  | ❌ No    |
-| Worst   | O(n log n)  | O(1)  | ❌ No  | ❌ No    |
-
-> **Guaranteed O(n log n) and in-place** — the best of both worlds compared to QuickSort (not guaranteed) and MergeSort (not in-place).
-
----
-
-## ⚙️ How It Works
-
-**Phase 1 — Build Max-Heap (heapify entire array):**
-1. Start from the last non-leaf node (`n//2 - 1`) and call heapify down to index 0.
-2. After this phase, `arr[0]` is the maximum.
-
-**Phase 2 — Extract max one by one:**
-3. Swap `arr[0]` (max) with `arr[i]` (last element in unsorted portion).
-4. The swapped element is now in its **final sorted position**.
-5. Reduce heap size by 1 and heapify from root to restore heap property.
-6. Repeat until heap has 1 element.
-
----
-
-## 🔢 Step-by-Step Trace
-
-Input: `[4, 10, 3, 5, 1]`
-
-**Build max-heap:**
-- Heapify from index 1: 10 > children → no swap
-- Heapify from index 0: 4 < 10 → swap → `[10, 5, 3, 4, 1]`
-
-Heap: `[10, 5, 3, 4, 1]`
-
-**Extract phase:**
-
-| Step | Swap           | Heap portion        | Sorted portion  |
-|------|----------------|---------------------|-----------------|
-| 1    | arr[0]↔arr[4]  | heapify `[1,5,3,4]` → `[5,4,3,1]` | `[..., 10]` |
-| 2    | arr[0]↔arr[3]  | heapify `[1,4,3]` → `[4,1,3]`     | `[..., 5, 10]`|
-| 3    | arr[0]↔arr[2]  | heapify `[3,1]` → `[3,1]`         | `[..., 4, 5, 10]`|
-| 4    | arr[0]↔arr[1]  | `[1]`                              | `[1, 3, 4, 5, 10]`|
-
-Final: `[1, 3, 4, 5, 10]` ✅
-
----
-
-## 🐍 Python Implementation
-
+## Kod
 ```python
 def heap_sort(arr):
     n = len(arr)
-
-    # Phase 1: Build a max-heap from the array
-    # Start from last non-leaf and heapify upward to root
+    # Mərhələ 1: maks-topa qur
     for i in range(n // 2 - 1, -1, -1):
         heapify(arr, n, i)
-
-    # Phase 2: Extract elements one by one from the heap
+    # Mərhələ 2: bir-bir çıxar
     for i in range(n - 1, 0, -1):
-        arr[0], arr[i] = arr[i], arr[0]   # Move current max to the end
-        heapify(arr, i, 0)                 # Restore heap for the reduced heap
+        arr[0], arr[i] = arr[i], arr[0]   # cari maksimumu sona apar
+        heapify(arr, i, 0)                 # azalmış topanı bərpa et
 
 def heapify(arr, n, i):
-    """Ensure the subtree rooted at index i satisfies max-heap property."""
-    largest = i           # Assume root is largest
-    left = 2 * i + 1
-    right = 2 * i + 2
-
-    if left < n and arr[left] > arr[largest]:    # Left child is larger than root
+    largest = i
+    left, right = 2 * i + 1, 2 * i + 2
+    if left < n and arr[left] > arr[largest]:
         largest = left
-    if right < n and arr[right] > arr[largest]:  # Right child is largest of all
+    if right < n and arr[right] > arr[largest]:
         largest = right
+    if largest != i:                       # kök ən böyük deyil
+        arr[i], arr[largest] = arr[largest], arr[i]
+        heapify(arr, n, largest)           # təsirlənmiş alt-ağacı düzəlt
 
-    if largest != i:                             # Root is not the largest
-        arr[i], arr[largest] = arr[largest], arr[i]  # Swap root with largest
-        heapify(arr, n, largest)                 # Recursively fix the affected subtree
-
-# Example
 arr = [4, 10, 3, 5, 1]
 heap_sort(arr)
-print("Sorted:", arr)   # [1, 3, 4, 5, 10]
+print(arr)   # [1, 3, 4, 5, 10]
 ```
 
----
+## Mürəkkəblik
+| Hal | Vaxt | Yaddaş |
+|-----|------|--------|
+| Hər zaman | O(n log n) | O(1) |
 
-## 🎯 Recognize This Problem When...
+Stabil deyil ❌ · Yerində ✅ · Həm zəmanətli O(n log n), həm də yerində — QuickSort (zəmanət yox) və MergeSort (yerində deyil) arasında qızıl orta.
 
-- You need **in-place O(n log n)** sorting with no extra memory.
-- You need a **priority queue** — max/min element always accessible in O(log n).
-- The problem asks for the **k largest/smallest** elements efficiently.
-- You need worst-case O(n log n) AND in-place (QuickSort fails the guarantee; MergeSort fails in-place).
+## Nə vaxt
+- ✅ Əlavə yaddaş olmadan zəmanətli O(n log n) lazım olanda.
+- ✅ Prioritet növbə (priority queue) və ya k ən böyük/kiçik element.
+- ❌ Stabillik lazımdır — [Merge Sort](MergeSort.md).
+- ❌ Keş performansı vacibdir — QuickSort praktikada daha sürətli.
 
----
-
-## ✅ When to Use / ❌ When NOT to Use
-
-| Situation                                  | Verdict                                          |
-|--------------------------------------------|--------------------------------------------------|
-| In-place O(n log n) with no extra space    | ✅ Only O(n log n) in-place sort with guarantee  |
-| k largest/smallest elements                | ✅ Use a heap of size k                          |
-| Memory is very constrained                 | ✅ O(1) auxiliary space                          |
-| Need stable sort                           | ❌ Not stable — use Merge Sort                   |
-| Cache performance matters                  | ❌ QuickSort is faster in practice (cache-friendly)|
-| Nearly sorted input                        | ❌ No adaptive benefit                           |
-
----
-
-## 🔗 Related Algorithms
-
-| Algorithm                          | How it relates                                              |
-|------------------------------------|-------------------------------------------------------------|
-| [Quick Sort](QuickSort.md)         | Also in-place; faster average case but O(n²) worst case    |
-| [Merge Sort](MergeSort.md)         | Guaranteed O(n log n) and stable; needs O(n) space         |
-| [Selection Sort](SelectionSort.md) | Same "find max, place at end" idea — Heap Sort is the O(n log n) upgrade |
-
----
-
-## 📝 Practice Problems
-
-| Problem                              | Platform   | Difficulty |
-|-------------------------------------|------------|------------|
-| Kth Largest Element in an Array     | [LeetCode 215](https://leetcode.com/problems/kth-largest-element-in-an-array/) | 🟡 Medium |
-| Sort an Array                       | [LeetCode 912](https://leetcode.com/problems/sort-an-array/) | 🟡 Medium |
-| Top K Frequent Elements             | [LeetCode 347](https://leetcode.com/problems/top-k-frequent-elements/) | 🟡 Medium |
-| Find Median from Data Stream        | [LeetCode 295](https://leetcode.com/problems/find-median-from-data-stream/) | 🔴 Hard |
+## Əlaqəli
+- [Quick Sort](QuickSort.md) — yerində; orta halda sürətli, amma pis halda O(n²).
+- [Merge Sort](MergeSort.md) — zəmanətli O(n log n) və stabil; O(n) yaddaş.
+- [Selection Sort](SelectionSort.md) — eyni "maksimumu tap, sona qoy" fikri; Heap Sort onun O(n log n) versiyasıdır.

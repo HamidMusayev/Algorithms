@@ -1,161 +1,48 @@
-# Activity Selection Problem 📅
+# Activity Selection (Fəaliyyət Seçimi)
 
----
+**Fikir:** Bir iclas otağı və başlanğıc/bitmə vaxtı olan iclaslar var. Üst-üstə düşmədən maksimum sayda iclas keçirmək istəyirik. Acgöz (greedy) fikir: **həmişə ən tez bitən iclası seç** — tez bitirsən, gələcəyə daha çox yer qalır.
 
-## 🧠 Intuition
+## Necə işləyir
+1. Bütün fəaliyyətləri **bitmə vaxtına görə** artan sırala.
+2. **İlk** fəaliyyəti seç (ən tez bitən).
+3. Hər növbəti fəaliyyət üçün: başlanğıcı son seçilənin bitmə vaxtından ≥ olarsa → uyğun → seç; yoxsa atla.
 
-You have a single meeting room and a list of meetings, each with a start and end time. You want to schedule as many meetings as possible without overlap. The greedy insight: **always pick the meeting that ends earliest**. By finishing sooner, you leave maximum room for future meetings.
+> Niyə işləyir: ən tez bitən uyğun fəaliyyəti seçmək həmişə ən az qədər yer qoyur (mübadilə arqumenti).
 
-**Mental model:** Sort by finish time. Always pick the activity that ends soonest and doesn't conflict with the last chosen one.
+## Nümunə
+Fəaliyyətlər (bitməyə görə): A1(1,4), A2(3,5), A3(0,6), A4(5,7), A5(8,11)
+- A1 ✅ → A2 (3<4) ❌ → A3 (0<4) ❌ → A4 (5≥4) ✅ → A5 (8≥7) ✅
+- Seçildi: **A1, A4, A5** (3 fəaliyyət) ✅
 
----
-
-## 📊 Complexity
-
-| Metric | Value |
-|--------|-------|
-| Time Complexity | O(n log n) — dominated by sorting |
-| Space Complexity | O(1) extra |
-| Greedy choice | Earliest finishing time |
-
----
-
-## ⚙️ How It Works
-
-1. **Sort** all activities by their finish time (ascending).
-2. Select the **first activity** (earliest finish).
-3. For each subsequent activity:
-   - If its start time ≥ the finish time of the last selected activity → **compatible** → select it.
-   - Otherwise → skip it (it overlaps).
-4. Return all selected activities.
-
-**Why greedy works:** Selecting the earliest-finishing compatible activity always leaves at least as much room as any other choice (exchange argument proof).
-
----
-
-## 🔢 Step-by-Step Trace
-
-Activities (sorted by finish time):
-
-| Activity | Start | Finish |
-|----------|-------|--------|
-| A1       | 1     | 4      |
-| A2       | 3     | 5      |
-| A3       | 0     | 6      |
-| A4       | 5     | 7      |
-| A5       | 8     | 11     |
-
-| Step | Activity | Start | Finish | last_finish | Compatible? | Selected? |
-|------|----------|-------|--------|-------------|-------------|-----------|
-| 1    | A1       | 1     | 4      | -∞          | ✅          | ✅        |
-| 2    | A2       | 3     | 5      | 4           | 3 < 4 ❌    | ❌        |
-| 3    | A3       | 0     | 6      | 4           | 0 < 4 ❌    | ❌        |
-| 4    | A4       | 5     | 7      | 4           | 5 ≥ 4 ✅    | ✅        |
-| 5    | A5       | 8     | 11     | 7           | 8 ≥ 7 ✅    | ✅        |
-
-Selected: **A1, A4, A5** (3 activities) ✅
-
----
-
-## 🐍 Python Implementation
-
+## Kod
 ```python
 def activity_selection(activities):
-    """
-    activities: list of (start, finish) tuples
-    Returns the maximum number of non-overlapping activities and which ones.
-    """
-    # Sort by finish time — the key greedy decision
-    activities = sorted(activities, key=lambda x: x[1])
-
-    selected = [activities[0]]   # Always select the first (earliest finish)
+    """activities: (başlanğıc, bitmə) cütləri."""
+    activities = sorted(activities, key=lambda x: x[1])   # bitməyə görə sırala
+    selected = [activities[0]]
     last_finish = activities[0][1]
-
     for start, finish in activities[1:]:
-        if start >= last_finish:        # Compatible: starts after last selection ends
+        if start >= last_finish:           # uyğun: son seçimdən sonra başlayır
             selected.append((start, finish))
-            last_finish = finish        # Update the finish time of last selected
-
+            last_finish = finish
     return selected
 
-
-def activity_selection_weighted(activities):
-    """
-    Weighted version (maximize total weight, not count) requires DP.
-    activities: list of (start, finish, weight) tuples
-    """
-    activities = sorted(activities, key=lambda x: x[1])
-    n = len(activities)
-    dp = [0] * (n + 1)
-
-    def last_compatible(i):
-        """Binary search for the last activity that finishes before activity i starts."""
-        lo, hi = 0, i - 1
-        while lo <= hi:
-            mid = (lo + hi) // 2
-            if activities[mid][1] <= activities[i][0]:
-                lo = mid + 1
-            else:
-                hi = mid - 1
-        return hi    # Returns -1 if none found
-
-    for i in range(n):
-        j = last_compatible(i)
-        dp[i + 1] = max(dp[i],                            # Skip activity i
-                        (dp[j + 1] if j >= 0 else 0) + activities[i][2])  # Take activity i
-
-    return dp[n]
-
-
-# Example (unweighted)
-activities = [(1, 4), (3, 5), (0, 6), (5, 7), (3, 9), (5, 9), (6, 10), (8, 11)]
-print("Selected:", activity_selection(activities))
-# [(1, 4), (5, 7), (8, 11)]
-
-# Example (weighted DP)
-weighted = [(1, 4, 3), (3, 5, 1), (0, 6, 5), (5, 7, 4), (8, 11, 2)]
-print("Max weighted:", activity_selection_weighted(weighted))
-# 9
+activities = [(1,4), (3,5), (0,6), (5,7), (3,9), (5,9), (6,10), (8,11)]
+print(activity_selection(activities))   # [(1,4), (5,7), (8,11)]
 ```
 
----
+## Mürəkkəblik
+| Metrika | Dəyər |
+|---------|-------|
+| Vaxt | O(n log n) (sıralama) |
+| Yaddaş | O(1) əlavə |
 
-## 🎯 Recognize This Problem When...
+## Nə vaxt
+- ✅ Üst-üstə düşməyən maksimum sayda interval/tapşırıq planlaşdırmaq (iclas otağı).
+- ✅ Məqsəd SAY-dır (çəkili dəyər yox) — greedy işləyir.
+- ❌ Ümumi mənfəəti (sayı yox) maksimumlaşdırmaq — çəkili interval planlaşdırma (DP) lazımdır.
 
-- You need to **schedule the maximum number of non-overlapping intervals/tasks**.
-- Keywords: "meeting room scheduling", "maximum activities", "non-overlapping intervals".
-- Each task has a start and end time and takes the entire interval.
-- You want to maximize COUNT (not weighted value) — greedy works.
-
----
-
-## ✅ When to Use / ❌ When NOT to Use
-
-| Situation | Verdict |
-|-----------|---------|
-| Maximize count of non-overlapping activities | ✅ Greedy (sort by end time) |
-| Meeting room scheduling | ✅ Classic application |
-| Each job takes exactly one time unit | ✅ Use Job Scheduling with deadlines |
-| Maximize total profit (not count) | ❌ Use Weighted Interval Scheduling (DP) |
-| Activities have varying durations and weights | ❌ Greedy fails — use DP |
-
----
-
-## 🔗 Related Algorithms
-
-| Algorithm | How it relates |
-|-----------|---------------|
-| [Job Scheduling](JobScheduling.md) | Also greedy scheduling; jobs take 1 unit each |
-| [Fractional Knapsack](FractionalKnapsack.md) | Also greedy; value/weight ratio instead of finish time |
-| [Huffman Coding](HuffmanCoding.md) | Also greedy; priority queue of frequencies |
-
----
-
-## 📝 Practice Problems
-
-| Problem | Platform | Difficulty |
-|---------|----------|------------|
-| [Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/) | LeetCode | 🟡 Medium |
-| [Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/) | LeetCode | 🟡 Medium |
-| [Minimum Number of Arrows](https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/) | LeetCode | 🟡 Medium |
-| [Activity Selection](https://www.hackerrank.com/challenges/activity-selection/problem) | HackerRank | 🟢 Easy |
+## Əlaqəli
+- [Job Scheduling](JobScheduling.md) — həm də greedy; hər tapşırıq 1 vahid çəkir.
+- [Fractional Knapsack](FractionalKnapsack.md) — həm də greedy; bitmə vaxtı yox, dəyər/çəki nisbəti.
+- [Huffman Coding](HuffmanCoding.md) — həm də greedy; tezliklərin prioritet növbəsi.

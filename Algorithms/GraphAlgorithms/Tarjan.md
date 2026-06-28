@@ -1,153 +1,75 @@
-# Tarjan's Algorithm 🔄
+# Tarjan Alqoritmi
 
----
+**Fikir:** **Güclü Əlaqəli Komponent (SCC)** — hər node-dan hər digərinə çatmaq mümkün olan node qrupudur (yönlü qrafda qarşılıqlı çatma "adası"). Tarjan bir DFS-də bütün SCC-ləri tapır.
 
-## 🧠 Intuition
+Açar fikir: DFS zamanı node `u` üçün `disc[u] == low[u]`-dursa (aşkarlanma vaxtı = alt-ağacdan çatıla bilən ən kiçik vaxt), `u` bir SCC-nin **kökü**dür.
 
-A **Strongly Connected Component (SCC)** is a group of nodes where you can reach every node from every other node. Think of it as an "island" of mutual reachability in a directed graph.
+## Necə işləyir
+1. Hər ziyarət olunmamış node-dan DFS başlat.
+2. Hər node-a **aşkarlanma vaxtı** `disc[u]` və **low dəyəri** `low[u]` ver (əvvəlcə bərabər).
+3. Node-u **stekə** qoy və `on_stack` işarələ.
+4. Hər `v` qonşusu üçün:
+   - Ziyarət olunmayıbsa: rekursiya; sonra `low[u] = min(low[u], low[v])`.
+   - Stekdədirsə: `low[u] = min(low[u], disc[v])` (geri-tilov → eyni SCC).
+5. `low[u] == disc[u]` → **SCC kökü**: stekdən `u` çıxana qədər node-ları çıxar. O qrup bir SCC-dir.
 
-Tarjan's key insight: during a DFS, if a node `u` has `disc[u] == low[u]` (its "discovery time" equals the lowest time reachable from its subtree), then `u` is the **root** of an SCC — everything on the DFS stack down to `u` belongs to the same component.
+## Nümunə
+`0→1, 1→2, 2→0, 2→3, 3→4, 4→5, 5→3`
+İki SCC: `{0,1,2}` və `{3,4,5}` ✅
 
-**Mental model:** DFS + track "how far back can I reach?" — when you can't reach any further back than yourself, you've found an SCC root.
-
----
-
-## 📊 Complexity
-
-| Metric | Value |
-|--------|-------|
-| Time Complexity | O(V + E) — single DFS pass |
-| Space Complexity | O(V) |
-| Output | List of all Strongly Connected Components |
-
----
-
-## ⚙️ How It Works
-
-1. For each unvisited node, start a DFS.
-2. Assign each node a **discovery time** `disc[u]` and **low value** `low[u]` (initially same as disc).
-3. Push the node onto a **stack** and mark it `on_stack`.
-4. For each neighbor `v`:
-   - If unvisited: recurse; then update `low[u] = min(low[u], low[v])`.
-   - If on stack: update `low[u] = min(low[u], disc[v])` (back edge → same SCC).
-5. If `low[u] == disc[u]`: this is an **SCC root** — pop nodes from stack until `u` is popped. That group is one SCC.
-
----
-
-## 🔢 Step-by-Step Trace
-
-Graph: `0→1, 1→2, 2→0, 2→3, 3→4, 4→5, 5→3`
-
-Two SCCs: `{0,1,2}` (mutual cycle) and `{3,4,5}` (mutual cycle)
-
-```
-DFS from 0: disc=[0,1,2,-1,-1,-1], low=[0,0,0,...]
-- Visit 0→1→2→0 (back edge: low[2]=min(low[2],disc[0])=0)
-- Back at 2: low[2]=0=disc[2]? No (disc[2]=2). Continue.
-- Back at 1: low[1]=min(low[1],low[2])=0
-- Back at 0: low[0]=min(low[0],low[1])=0; low[0]==disc[0]=0 → SCC ROOT!
-  Pop: 2, 1, 0 → SCC = {0,1,2} ✅
-- 2 also visits 3→4→5→3 (back edge: low[5]=min(disc[3])=3)
-- At 3: low[3]=3=disc[3] → SCC ROOT! Pop: 5,4,3 → SCC = {3,4,5} ✅
-```
-
----
-
-## 🐍 Python Implementation
-
+## Kod
 ```python
 def tarjan_scc(graph):
-    """
-    graph: { node: [neighbors] } — uses integer node IDs
-    Returns list of SCCs, each SCC is a list of nodes.
-    """
+    """graph: {node: [qonşular]}, tam ədəd node ID-ləri."""
     V = len(graph)
-    disc = [-1] * V           # Discovery time (-1 = not visited)
-    low = [0] * V             # Lowest disc time reachable from subtree
-    on_stack = [False] * V    # Whether node is currently on the DFS stack
-    stack = []
-    sccs = []
-    timer = [0]               # Use list for mutability in nested function
+    disc = [-1] * V           # aşkarlanma vaxtı (-1 = ziyarət olunmayıb)
+    low = [0] * V
+    on_stack = [False] * V
+    stack, sccs, timer = [], [], [0]
 
     def dfs(u):
-        disc[u] = low[u] = timer[0]   # Set discovery and low time
+        disc[u] = low[u] = timer[0]
         timer[0] += 1
         stack.append(u)
         on_stack[u] = True
-
         for v in graph[u]:
-            if disc[v] == -1:          # v not yet visited — recurse
+            if disc[v] == -1:
                 dfs(v)
-                low[u] = min(low[u], low[v])   # Update low via tree edge
-            elif on_stack[v]:          # v is on stack — back edge to same SCC
-                low[u] = min(low[u], disc[v])
-
-        # If u is the root of an SCC (can't reach further back)
-        if low[u] == disc[u]:
+                low[u] = min(low[u], low[v])      # ağac-tilovu
+            elif on_stack[v]:
+                low[u] = min(low[u], disc[v])     # geri-tilov
+        if low[u] == disc[u]:                     # SCC kökü
             scc = []
             while True:
                 w = stack.pop()
                 on_stack[w] = False
                 scc.append(w)
-                if w == u:             # Stop when we've popped u (the SCC root)
+                if w == u:
                     break
             sccs.append(scc)
 
     for u in range(V):
         if disc[u] == -1:
             dfs(u)
-
     return sccs
 
-
-# Example
-graph = {
-    0: [1], 1: [2], 2: [0, 3],   # 0-1-2 form an SCC
-    3: [4], 4: [5], 5: [3]        # 3-4-5 form an SCC
-}
-sccs = tarjan_scc(graph)
-print("SCCs:", sccs)
-# e.g., [[5, 4, 3], [2, 1, 0]] (order may vary)
+graph = {0:[1], 1:[2], 2:[0,3], 3:[4], 4:[5], 5:[3]}
+print(tarjan_scc(graph))   # məs. [[5,4,3],[2,1,0]]
 ```
 
----
+## Mürəkkəblik
+| Metrika | Dəyər |
+|---------|-------|
+| Vaxt | O(V + E) (bir DFS) |
+| Yaddaş | O(V) |
 
-## 🎯 Recognize This Problem When...
+## Nə vaxt
+- ✅ Yönlü qrafda qarşılıqlı çatılan node qruplarını tapmaq.
+- ✅ 2-SAT, kondensasiya qrafı (dövrləri sıxmaq), tsiklik asılılıqlar.
+- ❌ Yönsüz qraf (sadəcə əlaqəli komponentlər) — adi BFS/DFS.
+- ❌ Daha sadə kod istəyirsən — Kosaraju daha asandır.
 
-- You need to find **groups of mutually reachable nodes** in a directed graph.
-- The problem asks to **decompose a directed graph** into independent components.
-- Keywords: "strongly connected", "cyclic dependencies", "condensation", "2-SAT".
-- You need to check if a directed graph is **strongly connected** (one SCC = entire graph).
-- You're solving a **2-SAT** problem (Tarjan finds SCCs to determine satisfiability).
-
----
-
-## ✅ When to Use / ❌ When NOT to Use
-
-| Situation                                  | Verdict                                       |
-|--------------------------------------------|-----------------------------------------------|
-| Finding SCCs in one DFS pass               | ✅ Most efficient SCC algorithm               |
-| 2-SAT problem solving                      | ✅ SCCs reveal contradiction                  |
-| Condensation graph (compress cycles)       | ✅ Each SCC becomes one node in DAG           |
-| Undirected graphs (connected components)   | ❌ Use simple BFS/DFS instead                 |
-| Prefer simpler implementation              | ❌ Kosaraju is easier to understand/code      |
-
----
-
-## 🔗 Related Algorithms
-
-| Algorithm                              | How it relates                                                |
-|----------------------------------------|---------------------------------------------------------------|
-| [Kosaraju](Kosaraju.md)                | Also finds SCCs; uses 2 DFS passes (easier to understand)     |
-| [DFS](DFS.md)                          | Tarjan is a specialized DFS with extra bookkeeping            |
-| [Topological Sort](TopologicalSort.md) | Condensation graph (SCCs as nodes) is always a DAG            |
-
----
-
-## 📝 Practice Problems
-
-| Problem                              | Platform   | Difficulty |
-|-------------------------------------|------------|------------|
-| Critical Connections in a Network   | [LeetCode 1192](https://leetcode.com/problems/critical-connections-in-a-network/) | 🔴 Hard |
-| Number of Strongly Connected Components | Various competitive programming platforms | 🟡 Medium |
-| 2-SAT Problem                       | [Codeforces EDU](https://codeforces.com/edu/course/2/lesson/3) | 🔴 Hard |
+## Əlaqəli
+- [Kosaraju](Kosaraju.md) — həm də SCC tapır; 2 DFS keçidi (başa düşmək daha asan).
+- [DFS](DFS.md) — Tarjan əlavə qeydlərlə ixtisaslaşmış DFS-dir.
+- [Topological Sort](TopologicalSort.md) — SCC-lər node kimi götürülən kondensasiya qrafı həmişə DAG-dır.

@@ -1,137 +1,60 @@
-# 0/1 Knapsack Problem 🎒
+# 0/1 Knapsack (Bel Çantası)
 
----
+**Fikir:** Çantan ən çox `W` kq tutur. Hər əşyanın çəkisi və dəyəri var; hər birini ya **götür**, ya **burax** (bölmək olmaz). Çəki həddini aşmadan ümumi dəyəri maksimum et. Hər əşya üçün cəmi iki seçim — bu "0/1"-in mənasıdır.
 
-## 🧠 Intuition
+## Necə işləyir
+**Rekurrens:** `dp[i][w]` = ilk i əşya, w tutum ilə maksimum dəyər.
+- Əşya sığmırsa (`weight[i] > w`): `dp[i][w] = dp[i-1][w]`.
+- Sığırsa: `dp[i][w] = max(dp[i-1][w], dp[i-1][w - weight[i]] + value[i])`.
 
-You're a thief with a backpack that can hold at most `W` kg. You see `n` items, each with a weight and value. You can take each item or leave it (no splitting). You want to maximize total value without exceeding the weight limit.
+1. `dp[0][w] = 0` (əşya yox = dəyər yox).
+2. Hər əşya və hər tutum üçün: ya keç, ya götür — maksimumu seç.
+3. Cavab `dp[n][W]`.
 
-The key insight: for each item, you have exactly two choices — **take it** or **leave it**. The optimal decision for item `i` with remaining capacity `w` depends only on the optimal solution for previous items with either `w` or `w - weight[i]` capacity.
+## Nümunə
+weights=[1,3,4,5], values=[1,4,5,7], W=7
+→ `dp[4][7] = 9` (əşya 2+3: 3+4=7 kq, 4+5=9 dəyər) ✅
 
-**Mental model:** Fill a 2D table where `dp[i][w]` = "max value using first i items with capacity w". Each cell either skips item i or takes it.
-
----
-
-## 📊 Complexity
-
-| Metric | Value |
-|--------|-------|
-| Time Complexity | O(n × W) |
-| Space Complexity | O(n × W) — reducible to O(W) |
-
-> This is **pseudo-polynomial** — polynomial in W, but W can be large. NP-hard in the general sense.
-
----
-
-## ⚙️ How It Works
-
-**Recurrence:**
-```
-dp[i][w] = dp[i-1][w]                               if weight[i] > w  (can't take item i)
-dp[i][w] = max(dp[i-1][w],                          otherwise
-               dp[i-1][w - weight[i]] + value[i])
-```
-
-1. Initialize `dp[0][w] = 0` for all w (no items = no value).
-2. For each item `i` from 1 to n:
-   - For each capacity `w` from 0 to W:
-     - If item doesn't fit (`weight[i] > w`): copy from above `dp[i-1][w]`.
-     - If item fits: take max of skipping vs taking.
-3. Answer is `dp[n][W]`.
-
----
-
-## 🔢 Step-by-Step Trace
-
-Items: weights=[1,3,4,5], values=[1,4,5,7], W=7
-
-| i\w | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-|-----|---|---|---|---|---|---|---|---|
-| 0   | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 1(w=1,v=1)| 0|1|1|1|1|1|1|1|
-| 2(w=3,v=4)| 0|1|1|4|5|5|5|5|
-| 3(w=4,v=5)| 0|1|1|4|5|6|6|9|
-| 4(w=5,v=7)| 0|1|1|4|5|7|8|9|
-
-Answer: `dp[4][7] = 9` (take items 2+3: 3+4=7kg, 4+5=9 value) ✅
-
----
-
-## 🐍 Python Implementation
-
+## Kod
 ```python
 def knapsack_01(weights, values, W):
-    """2D DP table — clear and easy to understand."""
+    """2D DP cədvəli — aydın və başa düşülən."""
     n = len(weights)
     dp = [[0] * (W + 1) for _ in range(n + 1)]
-
     for i in range(1, n + 1):
         for w in range(W + 1):
-            # Option 1: don't take item i
-            dp[i][w] = dp[i - 1][w]
-            # Option 2: take item i (only if it fits)
-            if weights[i - 1] <= w:
+            dp[i][w] = dp[i - 1][w]                 # əşya i-ni götürmə
+            if weights[i - 1] <= w:                 # sığırsa götürməyi sına
                 take = dp[i - 1][w - weights[i - 1]] + values[i - 1]
                 dp[i][w] = max(dp[i][w], take)
-
     return dp[n][W]
 
-
-def knapsack_01_optimized(weights, values, W):
-    """Space-optimized: O(W) — traverse weights backwards to avoid using item twice."""
+def knapsack_optimized(weights, values, W):
+    """Yaddaş-optimal O(W). Tutumu geriyə gəz — hər əşya bir dəfə."""
     dp = [0] * (W + 1)
     for i in range(len(weights)):
-        # Traverse backwards: ensures each item is only used once
         for w in range(W, weights[i] - 1, -1):
             dp[w] = max(dp[w], dp[w - weights[i]] + values[i])
     return dp[W]
 
-
-# Example
-weights = [1, 3, 4, 5]
-values  = [1, 4, 5, 7]
-print(knapsack_01(weights, values, 7))           # 9
-print(knapsack_01_optimized(weights, values, 7)) # 9
+print(knapsack_01([1,3,4,5], [1,4,5,7], 7))   # 9
 ```
 
----
+## Mürəkkəblik
+| Metrika | Dəyər |
+|---------|-------|
+| Vaxt | O(n × W) |
+| Yaddaş | O(n × W) → O(W)-yə endirilə bilər |
 
-## 🎯 Recognize This Problem When...
+Psevdo-polinomdur (W-yə görə polinom, amma W böyük ola bilər).
 
-- You must **select a subset** of items to maximize value/profit subject to a **capacity constraint**.
-- Each item can be taken **at most once** (0 or 1 times).
-- Keywords: "choose items without exceeding budget/weight", "yes/no for each item".
-- The decision for each item is binary — this is the "0/1" in the name.
+## Nə vaxt
+- ✅ Tutum məhdudiyyəti ilə dəyəri maksimumlaşdıran **alt-çoxluq seçimi**; hər əşya ən çox bir dəfə.
+- ✅ Resurs bölgüsü, portfel seçimi.
+- ❌ Əşyalar hissələrə bölünə bilir — Fractional Knapsack (greedy).
+- ❌ Əşyalar limitsiz sayda — Unbounded Knapsack / Coin Change.
 
----
-
-## ✅ When to Use / ❌ When NOT to Use
-
-| Situation                                  | Verdict                                       |
-|--------------------------------------------|-----------------------------------------------|
-| Subset selection with binary choices       | ✅ Classic 0/1 Knapsack                       |
-| Resource allocation, portfolio selection   | ✅ Direct application                         |
-| Items can be split into fractions          | ❌ Use Fractional Knapsack (greedy)           |
-| Items can be used multiple times           | ❌ Use Unbounded Knapsack variant             |
-| W is astronomically large                  | ❌ DP is too slow; use branch-and-bound       |
-
----
-
-## 🔗 Related Algorithms
-
-| Algorithm | How it relates |
-|-----------|---------------|
-| [Subset Sum](SubsetSum.md) | Special case: values=weights, target sum instead of max value |
-| [Fractional Knapsack](../GreedyAlgorithms/FractionalKnapsack.md) | Items splittable → greedy works |
-| [Coin Change](CoinChange.md) | Unbounded knapsack variant (unlimited quantity per item) |
-
----
-
-## 📝 Practice Problems
-
-| Problem | Platform | Difficulty |
-|---------|----------|------------|
-| [Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/) | LeetCode | 🟡 Medium |
-| [Target Sum](https://leetcode.com/problems/target-sum/) | LeetCode | 🟡 Medium |
-| [Last Stone Weight II](https://leetcode.com/problems/last-stone-weight-ii/) | LeetCode | 🟡 Medium |
-| [Knapsack](https://www.hackerrank.com/challenges/unbounded-knapsack/problem) | HackerRank | 🟡 Medium |
+## Əlaqəli
+- [Subset Sum](SubsetSum.md) — xüsusi hal: dəyər=çəki, maksimum yox, hədəf cəm.
+- [Fractional Knapsack](../GreedyAlgorithms/FractionalKnapsack.md) — bölünən əşyalar → greedy.
+- [Coin Change](CoinChange.md) — limitsiz knapsack variantı.

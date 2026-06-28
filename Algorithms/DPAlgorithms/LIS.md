@@ -1,142 +1,62 @@
-# Longest Increasing Subsequence (LIS) 📈
+# Longest Increasing Subsequence (LIS)
 
----
+**Fikir:** Massivdə soldan-sağa, geri qayıtmadan seçilən, ciddi artan ən uzun "pilləkən". `dp[i]` = məhz `i` indeksində bitən ən uzun artan alt-ardıcıllığın uzunluğu. (Alt-ardıcıllıq bitişik olmaya bilər.)
 
-## 🧠 Intuition
+## Necə işləyir
+**O(n²) DP:** `dp[i] = max(dp[j] + 1)`, bütün `j < i` üçün `arr[j] < arr[i]` olduqda. Baza: `dp[i] = 1`.
 
-Imagine patience sorting — a card game where you place cards on piles, always placing a card on the leftmost pile whose top card is ≥ your card (or making a new pile). The number of piles at the end equals the LIS length.
+**O(n log n) (səbir sıralaması):**
+1. `tails` massivi saxla: `tails[i]` = `i+1` uzunluqlu bütün artan ardıcıllıqların ən kiçik son elementi.
+2. Hər element üçün `tails`-də binary axtarış et:
+   - Hamısından böyükdürsə → əlavə et (yeni daha uzun LIS).
+   - Yoxsa → tapılan mövqeyi əvəz et (ən kiçik mümkün son).
 
-More intuitively: think of an array as a terrain. The LIS is the longest "staircase" you can climb — strictly going up — picking elements from left to right without backtracking.
+## Nümunə
+`[10, 9, 2, 5, 3, 7, 101, 18]`
+- ən uzun: [2, 3, 7, 101] və ya [2, 3, 7, 18] → uzunluq **4** ✅
 
-**Mental model:** `dp[i]` = length of the longest increasing subsequence ending exactly at index `i`.
-
----
-
-## 📊 Complexity
-
-| Approach | Time | Space |
-|----------|------|-------|
-| DP (O(n²)) | O(n²) | O(n) |
-| Binary search (patience sorting) | O(n log n) | O(n) |
-
----
-
-## ⚙️ How It Works
-
-**O(n²) DP approach:**
-```
-dp[i] = max(dp[j] + 1) for all j < i where arr[j] < arr[i]
-```
-Base: `dp[i] = 1` (each element alone is an LIS of length 1).
-
-**O(n log n) binary search approach (patience sort):**
-1. Maintain a `tails` array: `tails[i]` = smallest tail element for all increasing subsequences of length `i+1`.
-2. For each element, binary search in `tails` for its insertion point:
-   - If larger than all tails → append (new longer LIS found).
-   - Otherwise → replace the found position (maintain smallest possible tail).
-
----
-
-## 🔢 Step-by-Step Trace
-
-Array: `[10, 9, 2, 5, 3, 7, 101, 18]`
-
-**O(n²) DP:**
-
-| i | arr[i] | dp[i] (LIS ending here) | Explanation |
-|---|--------|--------------------------|-------------|
-| 0 | 10     | 1                        | Just [10]   |
-| 1 | 9      | 1                        | Just [9]    |
-| 2 | 2      | 1                        | Just [2]    |
-| 3 | 5      | 2                        | [2,5]       |
-| 4 | 3      | 2                        | [2,3]       |
-| 5 | 7      | 3                        | [2,3,7] or [2,5,7] |
-| 6 | 101    | 4                        | [2,3,7,101] |
-| 7 | 18     | 4                        | [2,3,7,18]  |
-
-`max(dp) = 4` ✅
-
----
-
-## 🐍 Python Implementation
-
+## Kod
 ```python
 def lis_n2(arr):
-    """O(n²) DP — easier to understand, reconstructible."""
+    """O(n²) — başa düşülən, bərpa edilə bilən."""
     if not arr:
         return 0
-    n = len(arr)
-    dp = [1] * n    # Every element alone is an LIS of length 1
-
-    for i in range(1, n):
+    dp = [1] * len(arr)
+    for i in range(1, len(arr)):
         for j in range(i):
-            if arr[j] < arr[i]:             # arr[j] can extend the subsequence ending at i
+            if arr[j] < arr[i]:               # i-də bitən ardıcıllığı uzada bilər
                 dp[i] = max(dp[i], dp[j] + 1)
-
     return max(dp)
-
 
 from bisect import bisect_left
 
 def lis_nlogn(arr):
-    """O(n log n) — patience sorting via binary search."""
-    tails = []   # tails[i] = smallest tail of all IS of length i+1
-
+    """O(n log n) — binary axtarış ilə."""
+    tails = []
     for x in arr:
-        pos = bisect_left(tails, x)   # Find leftmost position where tails[pos] >= x
+        pos = bisect_left(tails, x)
         if pos == len(tails):
-            tails.append(x)           # x extends the longest IS found so far
+            tails.append(x)                   # ən uzun LIS-i uzadır
         else:
-            tails[pos] = x            # Replace with smaller tail (better for future)
+            tails[pos] = x                    # daha kiçik son ilə əvəz et
+    return len(tails)                          # qədəh sayı = LIS uzunluğu
 
-    return len(tails)    # Number of piles = LIS length
-    # Note: tails itself is NOT the LIS — only its length is correct
-
-
-# Example
 arr = [10, 9, 2, 5, 3, 7, 101, 18]
-print("O(n²):", lis_n2(arr))       # 4
-print("O(n log n):", lis_nlogn(arr))  # 4
+print(lis_n2(arr), lis_nlogn(arr))   # 4 4
 ```
 
----
+## Mürəkkəblik
+| Yanaşma | Vaxt | Yaddaş |
+|---------|------|--------|
+| DP | O(n²) | O(n) |
+| Binary axtarış | O(n log n) | O(n) |
 
-## 🎯 Recognize This Problem When...
+## Nə vaxt
+- ✅ Massivin ən uzun **ciddi artan** alt-ardıcıllığı (alt-sətir yox).
+- ✅ Qutu yığma (hər ölçü növbətindən kiçik), ən uzun söz-cüt zənciri.
+- ✅ Faktiki ardıcıllıq lazımdırsa — O(n²) DP + sələf izləmə.
+- ❌ Bitişik artan alt-massiv lazımdır — sadə xətti gəzinti.
 
-- You need the **longest strictly increasing** subsequence (not substring) of an array.
-- Keywords: "longest increasing", "longest chain", "box stacking", "longest rising".
-- The problem can be reduced to: find the longest chain of elements satisfying a pairwise constraint.
-- Patience sorting hints: "pile" problems, "stack boxes", "schedule without overlap by some measure".
-
----
-
-## ✅ When to Use / ❌ When NOT to Use
-
-| Situation | Verdict |
-|-----------|---------|
-| Longest strictly increasing subsequence | ✅ Direct application |
-| Box stacking (each box's dims < next) | ✅ Sort by one dim, LIS on another |
-| Longest chain of word pairs | ✅ LIS variant |
-| Need the actual subsequence (not just length) | ✅ Use O(n²) DP with predecessor tracking |
-| Longest non-decreasing subsequence | ✅ Change `<` to `<=` in binary search |
-| Contiguous increasing subarray | ❌ Use a simple linear scan instead |
-
----
-
-## 🔗 Related Algorithms
-
-| Algorithm | How it relates |
-|-----------|---------------|
-| [LCS](LCS.md) | LCS of arr and sorted(arr) = LIS length |
-| [Knapsack](Knapsack.md) | Similar "extend or skip" DP pattern |
-
----
-
-## 📝 Practice Problems
-
-| Problem | Platform | Difficulty |
-|---------|----------|------------|
-| [Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/) | LeetCode | 🟡 Medium |
-| [Russian Doll Envelopes](https://leetcode.com/problems/russian-doll-envelopes/) | LeetCode | 🔴 Hard |
-| [Number of LIS](https://leetcode.com/problems/number-of-longest-increasing-subsequence/) | LeetCode | 🟡 Medium |
-| [Longest Arithmetic Subsequence](https://leetcode.com/problems/longest-arithmetic-subsequence/) | LeetCode | 🟡 Medium |
+## Əlaqəli
+- [LCS](LCS.md) — arr ilə sorted(arr)-ın LCS-i = LIS uzunluğu.
+- [Knapsack](Knapsack.md) — oxşar "uzat və ya atla" DP nümunəsi.
