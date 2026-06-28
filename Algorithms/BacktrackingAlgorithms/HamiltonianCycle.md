@@ -1,158 +1,66 @@
-# Hamiltonian Cycle 🔁
+# Hamiltonian Cycle (Hamilton Dövrü)
 
----
+**Fikir:** Hamilton dövrü **hər təpəni dəqiq bir dəfə** ziyarət edib başlanğıca qayıdır (kommivoyajyor hər şəhəri bir dəfə gəzib evə qayıdır kimi). Eyler dövründən fərqli (o hər **tilovu** bir dəfə keçir) — bu hər **təpəni** bir dəfə tələb edir. NP-tamdır, ona görə backtracking işlədirik.
 
-## 🧠 Intuition
+## Necə işləyir
+1. Təpə 0-dan başla (bütün dövrlər 0-ı əhatə edir).
+2. Yolun hər mövqeyi (1..N−1) üçün:
+   - Hər `v` təpəni sına ki: əvvəlki təpədən tilovu olsun və hələ ziyarət olunmasın.
+   - `v`-ni yola **yerləşdir**.
+   - Növbəti mövqe üçün **rekursiya** et.
+   - Bütün N təpə yerləşib VƏ son təpədən 0-a tilov varsa → **dövr tapıldı!**
+   - Yoxsa → **geri al**: `v`-ni çıxar, növbətini sına.
 
-A Hamiltonian Cycle visits **every vertex exactly once** and returns to the starting vertex. Think of a traveling salesman trying to visit every city once and return home — the Hamiltonian Cycle problem asks: does such a route exist?
+## Nümunə
+5 təpəli qrafda: yol `[0, 1, 2, 4, 3]` qurulur, 3→0 tilovu var →
+Dövr: **0 → 1 → 2 → 4 → 3 → 0** ✅
 
-Unlike Eulerian circuits (which traverse every **edge** once), Hamiltonian cycles require visiting every **vertex** once. This is NP-complete — no polynomial algorithm is known, so we use backtracking.
-
-**Mental model:** "Build the path vertex by vertex. At each step, try adding an adjacent unvisited vertex. If stuck (no valid next vertex), backtrack."
-
----
-
-## 📊 Complexity
-
-| Metric | Value |
-|--------|-------|
-| Time Complexity | O(N!) worst case |
-| Space Complexity | O(N) for the path |
-
----
-
-## ⚙️ How It Works
-
-1. Start at vertex 0 (WLOG — all cycles include vertex 0).
-2. For each position in the path (1 to N-1):
-   - Try each vertex `v` that:
-     - Has an edge from the previous vertex.
-     - Has not been visited yet.
-   - **Place** `v` in the path.
-   - **Recurse** to fill the next position.
-   - If we've placed all N vertices AND there's an edge back to vertex 0 → **cycle found!**
-   - Otherwise → **backtrack**: remove `v` and try the next candidate.
-
----
-
-## 🔢 Step-by-Step Trace
-
-5-vertex graph adjacency matrix (1 = edge exists):
-
-```
-   0  1  2  3  4
-0 [0, 1, 0, 1, 0]
-1 [1, 0, 1, 1, 1]
-2 [0, 1, 0, 0, 1]
-3 [1, 1, 0, 0, 1]
-4 [0, 1, 1, 1, 0]
-```
-
-Path building:
-```
-pos=1: try v=1 (edge 0→1 ✅) → path=[0,1]
-  pos=2: try v=2 (edge 1→2 ✅) → path=[0,1,2]
-    pos=3: try v=4 (edge 2→4 ✅) → path=[0,1,2,4]
-      pos=4: try v=3 (edge 4→3 ✅) → path=[0,1,2,4,3]
-        All N vertices placed! Edge 3→0? ✅ → CYCLE FOUND!
-        Cycle: 0 → 1 → 2 → 4 → 3 → 0 ✅
-```
-
----
-
-## 🐍 Python Implementation
-
+## Kod
 ```python
 def hamiltonian_cycle(graph):
-    """
-    graph: N×N adjacency matrix (graph[u][v] = 1 if edge u→v exists)
-    Returns the Hamiltonian cycle path, or None if no cycle exists.
-    """
+    """graph: N×N qonşuluq matrisi (graph[u][v]=1 → u→v tilovu)."""
     n = len(graph)
     path = [-1] * n
-    path[0] = 0   # Start at vertex 0
-
+    path[0] = 0                              # təpə 0-dan başla
     if backtrack(graph, path, 1):
-        return path + [path[0]]   # Append start to show cycle
+        return path + [path[0]]              # dövrü göstərmək üçün başı əlavə et
     return None
 
-
 def is_safe(graph, path, pos, v):
-    """Check if vertex v can be added at position pos in the path."""
-    if graph[path[pos - 1]][v] == 0:    # No edge from last vertex to v
+    if graph[path[pos - 1]][v] == 0:         # əvvəlki təpədən tilov yox
         return False
-    if v in path:                        # v already in path
+    if v in path:                            # v artıq yoldadır
         return False
     return True
 
-
 def backtrack(graph, path, pos):
     n = len(graph)
-    if pos == n:
-        # All vertices placed — check if there's an edge back to start
+    if pos == n:                             # hamısı yerləşib — başa tilov var?
         return graph[path[pos - 1]][path[0]] == 1
-
-    for v in range(1, n):               # Try each vertex (skip 0, it's the start)
+    for v in range(1, n):
         if is_safe(graph, path, pos, v):
-            path[pos] = v               # Place vertex v at position pos
-
+            path[pos] = v
             if backtrack(graph, path, pos + 1):
                 return True
+            path[pos] = -1                   # geri al
+    return False
 
-            path[pos] = -1              # Backtrack: remove v
-
-    return False   # No valid vertex found at this position
-
-
-# Example
-graph = [
-    [0, 1, 0, 1, 0],
-    [1, 0, 1, 1, 1],
-    [0, 1, 0, 0, 1],
-    [1, 1, 0, 0, 1],
-    [0, 1, 1, 1, 0],
-]
-cycle = hamiltonian_cycle(graph)
-print("Hamiltonian Cycle:", cycle)
-# [0, 1, 2, 4, 3, 0]
+graph = [[0,1,0,1,0],[1,0,1,1,1],[0,1,0,0,1],[1,1,0,0,1],[0,1,1,1,0]]
+print(hamiltonian_cycle(graph))   # [0, 1, 2, 4, 3, 0]
 ```
 
----
+## Mürəkkəblik
+| Metrika | Dəyər |
+|---------|-------|
+| Vaxt | O(N!) (ən pis) |
+| Yaddaş | O(N) |
 
-## 🎯 Recognize This Problem When...
+## Nə vaxt
+- ✅ Hər node-u dəqiq bir dəfə ziyarət edib başlanğıca qayıtmaq; kiçik qraf (N ≤ 15) və ya yalnız mövcudluq yoxlaması.
+- ❌ Böyük qraf (N > 20) — eksponensial; heuristika və ya DP (Held-Karp).
+- ❌ Minimum xərcli Hamilton dövrü (TSP) — Held-Karp DP O(2^N × N²) və ya təxminilər.
 
-- You need to visit **every node exactly once** and return to start.
-- Keywords: "Hamiltonian cycle/path", "visit all cities once", "route visiting all nodes".
-- The graph is small (N ≤ 20) or you need existence check only.
-- You see "does a cycle exist that visits every vertex?" — that's Hamiltonian.
-
----
-
-## ✅ When to Use / ❌ When NOT to Use
-
-| Situation | Verdict |
-|-----------|---------|
-| Small graphs (N ≤ 15) — check existence | ✅ Backtracking is feasible |
-| Theoretical/teaching constraint satisfaction | ✅ Classic NP-complete problem |
-| Large graphs (N > 20) | ❌ Backtracking is exponential — use heuristics or DP (Held-Karp) |
-| Minimum cost Hamiltonian cycle (TSP) | ❌ Use Held-Karp DP O(2^N × N²) for exact, or approximations |
-
----
-
-## 🔗 Related Algorithms
-
-| Algorithm | How it relates |
-|-----------|---------------|
-| [Knight's Tour](KnightsTour.md) | Hamiltonian path on the knight-move graph |
-| [N-Queens](NQueens.md) | Also backtracking constraint placement |
-| [DFS](../GraphAlgorithms/DFS.md) | Hamiltonian backtracking is DFS with undo |
-
----
-
-## 📝 Practice Problems
-
-| Problem | Platform | Difficulty |
-|---------|----------|------------|
-| [Hamiltonian Path](https://www.hackerrank.com/challenges/hamiltonian-path/problem) | HackerRank | 🔴 Hard |
-| [Find if Path Exists in Graph](https://leetcode.com/problems/find-if-path-exists-in-graph/) | LeetCode | 🟢 Easy |
-| Reconstruct Itinerary (Eulerian, related) | [LeetCode 332](https://leetcode.com/problems/reconstruct-itinerary/) | 🔴 Hard |
+## Əlaqəli
+- [Knight's Tour](KnightsTour.md) — at-gedişi qrafında Hamilton yolu.
+- [N-Queens](NQueens.md) — həm də backtracking məhdudiyyət yerləşdirmə.
+- [DFS](../GraphAlgorithms/DFS.md) — Hamilton backtracking geri-almalı DFS-dir.
